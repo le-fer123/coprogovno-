@@ -29,5 +29,6 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('', include(router.urls)),
-    path('answer/', AnswerUploadView.as_view(), name="answer-upload")
+    path('answer/', AnswerUploadView.as_view(), name="answer-upload"),
+    path('question/', QuestionView.as_view(), name="question-upload")
 ]

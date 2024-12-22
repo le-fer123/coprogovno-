@@ -45,3 +45,12 @@ def answer_gen(audio, context):
     text = result.text
 
     return result, text
+
+def question_get(context):
+    genai.configure(api_key="AIzaSyBJ7l-knz2iWlt9n68Cc_BUyLi77iOcPD8")
+
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    result = model.generate_content([context])
+    text = result.text
+
+    return result, text

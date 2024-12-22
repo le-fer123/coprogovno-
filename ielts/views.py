@@ -33,6 +33,8 @@ class AnswerUploadView(View):
             Please keep in mind that your answer will be broadcast to the user, and not to me
             So answer as you should answer to a client
             
+            There is also a history of dialogue here. I use this method to build a dialogue. Below I will give the user’s last question, if there is none, answer the above text. try to answer according to the given context. Please remember that you are not responding to me, but to the user.
+            
             Band 9	Expert user	You have a full operational command of the language. Your use of English is appropriate, accurate and fluent, and you show complete understanding.
             Band 8	Very good user	You have a fully operational command of the language with only occasional unsystematic inaccuracies and inappropriate usage. You may misunderstand some things in unfamiliar situations. You handle complex detailed argumentation well.
             Band 7	Good user	You have an operational command of the language, though with occasional inaccuracies, inappropriate usage and misunderstandings in some situations. Generally you handle complex language well and understand detailed reasoning.
@@ -42,10 +44,16 @@ class AnswerUploadView(View):
             Band 3	Extremely limited user	You convey and understand only general meaning in very familiar situations. There are frequent breakdowns in communication.
             Band 2	Intermittent user	You have great difficulty understanding spoken and written English.
             Band 1	Non-user	You have no ability to use the language except a few isolated words.
-            Band 0	Did not attempt the test	You did not answer the questions.'''
+            Band 0	Did not attempt the test	You did not answer the questions.
+            
+            
+            '''
         context += '\n\n' + sample.first.content
         context += '\n\n' + sample.second.content
+        context += '\n\n' + sample.second.followup
         context += '\n\n' + sample.third.content
+        context += '\n\n' + "THIS IS A HISTORY OF CHAT:"
+
         print(context)
         try:
             result, content = answer_gen(audio_path, context)
@@ -54,7 +62,23 @@ class AnswerUploadView(View):
         except Exception as e:
             return JsonResponse({"error": f"Unexpected error: {str(e)}"}, status=500)
 
-        return JsonResponse({"message": "ZAEBIS", "content": content, "sample_id": sample.id})
+        return JsonResponse({"message": "ZAEBIS", "content": content, "context": context, "sample_id": sample.id})
+@method_decorator(csrf_exempt, name='dispatch')
+class QuestionView(View):
+    def post(self, request, *args, **kwargs):
+        audio_file = request.FILES.get('audio')
+        context = request.POST.get("context")
+
+        audio_path = os.path.join(settings.MEDIA_ROOT, 'audio', audio_file.name)
+        os.makedirs(os.path.dirname(audio_path), exist_ok=True)
+        with open(audio_path, 'wb+') as destination:
+            for chunk in audio_file.chunks():
+                destination.write(chunk)
+
+        result, content = answer_gen(audio_path, context)
+
+        return JsonResponse({"message": "ZAEBIS", "content": content, "audio": audio_path, "context": context})
+
 
 
 class FirstPartViewSet(viewsets.ModelViewSet):
