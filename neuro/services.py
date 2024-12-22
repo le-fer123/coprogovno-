@@ -55,7 +55,5 @@ Sports Advertising and the Media
 
 model = genai.GenerativeModel("gemini-1.5-flash")
 result = model.generate_content([myfile, context])
-text = result.text
-print("TEXT")
-
+text = result
 print(text)
