@@ -2,8 +2,8 @@ import google.generativeai as genai
 
 genai.configure(api_key="AIzaSyBJ7l-knz2iWlt9n68Cc_BUyLi77iOcPD8")
 
-myfile = genai.upload_file("audio.mp3")
-print(f"{myfile=}")
+myfile = genai.upload_file("audio_2025-10-14_22-48-08.ogg")
+print(f"{myfile}")
 context = \
     '''
     I am a developer and I want to use you as a methodologist for the ielts oral interview. I will provide you with the criteria, user audio and the text of the interview itself. You are required to evaluate each part of the test, offer recommendations, advice, and evaluate the overall score according to the ielts criteria set out below. please try to explain everything clearly and understandably
@@ -53,7 +53,7 @@ Sports Advertising and the Media
 5) How important is money in sport?
 '''
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.5-flash")
 result = model.generate_content([myfile, context])
 text = result
 print(text)

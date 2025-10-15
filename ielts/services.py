@@ -37,19 +37,20 @@ def validation_answer(audio_file, sample_id):
 def answer_gen(audio, context):
     genai.configure(api_key="AIzaSyBJ7l-knz2iWlt9n68Cc_BUyLi77iOcPD8")
 
-    audio = genai.upload_file(audio)
+    audio = genai.upload_file(path=audio)
     print(f"{audio=}")
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     result = model.generate_content([audio, context])
     text = result.text
 
     return result, text
 
+
 def question_get(context):
     genai.configure(api_key="AIzaSyBJ7l-knz2iWlt9n68Cc_BUyLi77iOcPD8")
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     result = model.generate_content([context])
     text = result.text
 
